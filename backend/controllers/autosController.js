@@ -49,7 +49,7 @@ const deleteAuto = asyncHandler(async (req, res) => {
     }
 
     //const deletedTarea = await Tarea.findByIdAndDelete(req.params.id)
-    await Auto.remove()
+    await auto.remove()
 
     res.status(200).json(req.params.id)
 })
