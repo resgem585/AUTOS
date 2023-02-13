@@ -19,7 +19,8 @@ const setAuto = asyncHandler(async (req, res) => {
         Marca: req.body.Marca,
         Modelo: req.body.Modelo,
         Anio: req.body.Anio,
-        Color:  req.body.Color
+        Color:  req.body.Color,
+        user: req.user.id
     })
 
     res.status(201).json(auto)
@@ -32,6 +33,10 @@ const updateAuto = asyncHandler(async (req, res) => {
     if (!auto) {
         res.status(400)
         throw new Error('Auto no encontrado')
+    }
+     if (auto.user.toString() !== req.user.id) {
+        res.status(401)
+        throw new Error('Acceso no Autorizado')
     }
 
     const updateAuto = await Auto.findByIdAndUpdate(req.params.id, req.body, { new: true })
@@ -47,7 +52,11 @@ const deleteAuto = asyncHandler(async (req, res) => {
         res.status(400)
         throw new Error('Auto no encontrado')
     }
-
+        //verificamos que el user de la tarea sea igual al user del token
+    if (auto.user.toString() !== req.user.id) {
+        res.status(401)
+        throw new Error('Acceso no Autorizado')
+    }
     //const deletedTarea = await Tarea.findByIdAndDelete(req.params.id)
     await auto.remove()
 
